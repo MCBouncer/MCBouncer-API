@@ -19,6 +19,9 @@ public class UserBan {
         username = node.getString("username");
         issuer = node.getString("issuer");
         server = node.getString("server");
+        if (server == null) {
+            server = node.getString("subscribed_server");
+        }
         reason = node.getString("reason");
         time = node.getString("time");
     }
