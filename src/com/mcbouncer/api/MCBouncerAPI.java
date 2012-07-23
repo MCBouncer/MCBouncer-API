@@ -34,7 +34,7 @@ public class MCBouncerAPI {
     private String APIKey;
     private String host;
     
-    public MCBouncerAPI(String apiKey, String host) {
+    public MCBouncerAPI(String host, String apiKey) {
         this.APIKey = apiKey;
         this.host = host;
     }
