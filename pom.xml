@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mcbouncer</groupId>
     <artifactId>MCBouncer-API</artifactId>
-    <version>1.3.1beta</version>
+    <version>1.3.2beta</version>
     <name>MCBouncer-API</name>
     <description>MCBouncer API - http://mcbouncer.com</description>
     <scm>

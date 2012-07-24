@@ -17,6 +17,9 @@ public class UserBan {
 
     public UserBan(MapNode node) {
         username = node.getString("username");
+        if (username == null) {
+            username = node.getString("user");
+        }
         issuer = node.getString("issuer");
         server = node.getString("server");
         if (server == null) {
