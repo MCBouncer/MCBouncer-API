@@ -109,6 +109,7 @@ public class MCBouncer {
     private JSONObject delete(final String resource, final String object, Map<String, String> query) throws APIException {
         String url = String.format("%s/api/v2/%s/%s", getConfig().getString(Config.WEBSITE), resource, object);
         HttpRequestWithBody req = Unirest.delete(url);
+        req.header("Authorization", "APIKey " + getConfig().getString(Config.APIKEY));
 
         if (query != null) {
             for (Map.Entry<String, String> entry : query.entrySet()) {
