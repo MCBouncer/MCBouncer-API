@@ -29,17 +29,10 @@ public enum Perm {
     COMMAND_UNBAN,
 
     /* Messaging */
-    MESSAGE_BAN_NORMAL,
-    MESSAGE_BAN_ADMIN,
-    MESSAGE_BAN_OFFLINE,
-
-    MESSAGE_KICK_NORMAL,
-    MESSAGE_KICK_ADMIN,
-
+    MESSAGE_BAN,
+    MESSAGE_KICK,
     MESSAGE_RELOAD,
-
-    MESSAGE_UNBAN_NORMAL,
-    MESSAGE_UNBAN_ADMIN;
+    MESSAGE_UNBAN;
 
     private final String perm;
 
