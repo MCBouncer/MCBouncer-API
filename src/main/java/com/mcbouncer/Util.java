@@ -17,7 +17,31 @@
 
 package com.mcbouncer;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Util {
+    
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    static SimpleDateFormat dateFormatWithTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+    public static Date parseDate(String dateStr) {
+        if (dateStr == null) {
+            return null;
+        }
+        Date d = null;
+        try {
+            d = dateFormatWithTZ.parse(dateStr);
+        } catch (ParseException e) {
+            try {
+                d = dateFormat.parse(dateStr);
+            }
+            catch (ParseException e2) {}
+        }
+
+        return d;
+    }
 
     public static String join(String[] strings, String separator, int index) {
         StringBuilder s = new StringBuilder("");

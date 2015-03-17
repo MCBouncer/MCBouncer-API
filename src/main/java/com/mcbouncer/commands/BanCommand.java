@@ -21,6 +21,7 @@ import com.mcbouncer.*;
 import com.mcbouncer.api.CommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.Player;
+import com.mcbouncer.exceptions.APIException;
 
 public class BanCommand extends MCBouncerCommand {
 
@@ -48,7 +49,13 @@ public class BanCommand extends MCBouncerCommand {
             return false;
         }
 
-        plugin.addBan(user, reason, p);
+        try {
+            plugin.addBan(user, reason, p);
+        }
+        catch (APIException e) {
+            // TODO: Better error message
+            sender.sendMessage("ERROR!");
+        }
         return true;
     }
 }

@@ -19,6 +19,7 @@ package com.mcbouncer;
 
 import com.mcbouncer.api.Player;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 public class ConsolePlayer implements Player {
@@ -32,6 +33,10 @@ public class ConsolePlayer implements Player {
     }
 
     private ConsolePlayer() {
+    }
+
+    public InetAddress getIPAddress() {
+        return InetAddress.getLoopbackAddress();
     }
 
     public void kick(String message) {

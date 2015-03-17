@@ -17,10 +17,12 @@
 
 package com.mcbouncer.api;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 public interface Player extends CommandSender {
     public void kick(String message);
 
     public UUID getUniqueID();
+    public InetAddress getIPAddress();
 }

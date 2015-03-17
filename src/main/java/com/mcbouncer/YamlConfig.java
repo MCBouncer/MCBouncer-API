@@ -103,11 +103,16 @@ public class YamlConfig extends MCBouncerConfig {
 
     @Override
     public Boolean getBoolean(String path) {
+        return getBoolean(path, false);
+    }
+
+    @Override
+    public Boolean getBoolean(String path, Boolean def) {
         try {
             String s = this.get(path).toString();
             return Boolean.parseBoolean(s);
         } catch (final Exception e) {
-            return false;
+            return def;
         }
     }
 

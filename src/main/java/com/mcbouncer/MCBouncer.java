@@ -26,6 +26,7 @@ import com.mcbouncer.api.MCBouncerConfig;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.Player;
 import com.mcbouncer.exceptions.APIException;
+import com.mcbouncer.models.LoginResult;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -102,7 +103,38 @@ public class MCBouncer {
         return this.impl.getPlayer(username);
     }
 
-    private JSONObject delete(final String resource, final String object) throws APIException{
+    private JSONObject post(String resource, final Map<String, Object> fields) throws APIException {
+        String url = String.format("%s/api/v2/%s", getConfig().getString(Config.WEBSITE), resource);
+        HttpRequestWithBody req = Unirest.post(url);
+        req.header("Authorization", "APIKey " + getConfig().getString(Config.APIKEY));
+
+        JSONObject fobj = new JSONObject();
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            fobj.put(entry.getKey(), entry.getValue());
+        }
+
+        req.body(fobj.toString());
+
+        try {
+            HttpResponse<JsonNode> response = req.asJson();
+
+            JSONObject obj = response.getBody().getObject();
+
+            if (response.getStatus() >= 500) {
+                throw new APIException("Server error");
+            }
+            else if (response.getStatus() >= 400 && response.getStatus() < 500) {
+                throw new APIException(obj.getString("message"));
+            }
+
+            return obj;
+
+        } catch (final UnirestException e) {
+            throw new APIException(String.format("Failed to add %s", resource), e);
+        }
+    }
+
+    private JSONObject delete(final String resource, final String object) throws APIException {
         return delete(resource, object, null);
     }
 
@@ -132,44 +164,88 @@ public class MCBouncer {
         }
     }
 
-    public void addBan(final String username, final String reason, final String issuerName) {
+    public void addBan(final String username, final String reason, final String issuerName) throws APIException {
         Player user = this.getPlayer(username);
         Player issuer = this.getPlayer(issuerName);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(final String username, final String reason, final Player issuer) {
+    public void addBan(final String username, final String reason, final Player issuer) throws APIException {
         Player user = this.getPlayer(username);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(Player user, final String reason, final Player issuer) {
-        // TODO: Add ban here
+    public void addBan(Player user, final String reason, final Player issuer) throws APIException {
+        addBan(user, reason, issuer, null);
     }
 
-    public void removeBan(final String username) throws APIException {
+    public void addBan(Player user, final String reason, final Player issuer, String expiry) throws APIException {
+        Map<String, Object> fields = new HashMap<String, Object>();
+        fields.put("user_id", user.getUniqueID().toString());
+        fields.put("username", user.getName());
+        fields.put("reason", reason);
+        fields.put("issuer_id", issuer.getUniqueID().toString());
+        if (expiry != null) {
+            fields.put("expiry", expiry);
+        }
+
+        JSONObject ret = post("bans", fields);
+    }
+
+    public boolean removeBan(final String username) throws APIException {
         Player user = this.getPlayer(username);
-        removeBan(user);
+        return removeBan(user);
     }
 
-    public void removeBan(final Player user) throws APIException {
+    public boolean removeBan(final Player user) throws APIException {
         Map<String, String> query = new HashMap<String, String>();
         query.put("user_id", "");
-        delete("ban", user.getUniqueID().toString());
+        JSONObject ret = delete("ban", user.getUniqueID().toString(), query);
+
+        return ret.getBoolean("success");
     }
 
-    public void addNote(final String username, final String note, final String issuerName, boolean global) {
+    public boolean addNote(final String username, final String note, final String issuerName, boolean global) throws APIException {
         Player user = this.getPlayer(username);
         Player issuer = this.getPlayer(issuerName);
-        addNote(user, note, issuer, global);
+        return addNote(user, note, issuer, global);
     }
 
-    public void addNote(final String username, final String note, final Player issuer, boolean global) {
+    public boolean addNote(final String username, final String note, final Player issuer, boolean global) throws APIException {
         Player user = this.getPlayer(username);
-        addNote(user, note, issuer, global);
+        return addNote(user, note, issuer, global);
     }
 
-    public void addNote(Player user, final String note, final Player issuer, boolean global) {
-        // TODO: Add note here
+    public boolean addNote(Player user, final String note, final Player issuer, boolean global) throws APIException {
+        Map<String, Object> fields = new HashMap<String, Object>();
+        fields.put("username", user.getName());
+        fields.put("user_id", user.getUniqueID().toString());
+        fields.put("note", note);
+        fields.put("issuer_id", issuer.getUniqueID().toString());
+        fields.put("global", global);
+
+        JSONObject ret = post("notes", fields);
+
+        return ret.getBoolean("success");
+    }
+
+    public LoginResult login(String username) throws APIException {
+        Player user = this.getPlayer(username);
+
+        return login(user);
+    }
+
+    public LoginResult login(Player user) throws APIException {
+        Map<String, Object> fields = new HashMap<String, Object>();
+        fields.put("username", user.getName());
+        fields.put("user_id", user.getUniqueID().toString());
+
+        if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS)) {
+            fields.put("ipaddress", user.getIPAddress().toString());
+        }
+
+        JSONObject ret = post("login", fields);
+
+        return new LoginResult(ret);
     }
 }

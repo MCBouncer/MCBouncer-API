@@ -21,6 +21,7 @@ import com.mcbouncer.*;
 import com.mcbouncer.api.CommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.Player;
+import com.mcbouncer.exceptions.APIException;
 
 public class GlobalNoteCommand extends MCBouncerCommand {
 
@@ -48,7 +49,13 @@ public class GlobalNoteCommand extends MCBouncerCommand {
             return false;
         }
 
-        plugin.addNote(user, note, p, true);
+        try {
+            plugin.addNote(user, note, p, true);
+        }
+        catch (APIException e) {
+            // TODO: Add better error message.  This should pull from config.
+            sender.sendMessage("ERROR!");
+        }
         return true;
     }
 }
