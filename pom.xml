@@ -16,11 +16,12 @@
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.5</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.11</version>
+            <version>1.15</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -33,6 +34,16 @@
     <build>
         <finalName>MCBouncer-API</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
             <plugin>
@@ -53,16 +64,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>2.3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <version>2.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -73,7 +84,13 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.googlecode.json-simple:*</include>
-                                    <include>org.apache.httpcomponents:*</include>
+                                    <include>com.mashape.unirest:unirest-java</include>
+                                    <include>org.apache.httpcomponents:httpclient</include>
+                                    <include>org.apache.httpcomponents:httpcore</include>
+                                    <include>org.apache.httpcomponents:httpcore-nio</include>
+                                    <include>org.apache.httpcomponents:httpasyncclient</include>
+                                    <include>org.apache.httpcomponents:httpmime</include>
+                                    <include>org.json:json</include>
                                     <include>org.yaml:*</include>
                                     <include>commons*:*</include>
                                     <include>com.google.guava:*</include>

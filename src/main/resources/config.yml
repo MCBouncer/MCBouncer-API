@@ -1,0 +1,18 @@
+# Replace this with your API key from mcbouncer.com/apikey
+apiKey: REPLACE
+
+#Default messages used for banning and kicking
+defaultBanMessage: 'Banned for rule violation.'
+defaultKickMessage: 'Kicked by an admin.'
+
+#Number of bans a user must have before being disallowed from joining a server.
+#Set to -1 to prevent this feature
+numBansDisallow: -1
+
+#Whether or not to show messgaes to all the users on the server when a user is banned
+#true will send a message to everyone, false will message the mods only
+showBanMessages: false
+
+#Whether or not to disable IP functions including banip, unban ip, update user
+#IP Ban lookups
+disableIPFunctions: false
