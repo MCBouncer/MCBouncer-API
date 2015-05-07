@@ -18,29 +18,29 @@
 package com.mcbouncer.commands;
 
 import com.mcbouncer.*;
-import com.mcbouncer.api.CommandSender;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.exceptions.APIException;
 
 public class UnbanCommand extends MCBouncerCommand {
 
-    private MCBouncer plugin;
+    private MCBouncerImplementation impl;
 
-    public UnbanCommand(MCBouncer plugin) {
+    public UnbanCommand(MCBouncerImplementation impl) {
         super("unban", Perm.COMMAND_UNBAN, "delban");
-        this.plugin = plugin;
+        this.impl = impl;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
+    public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
         String user = args[0];
 
         try {
-            plugin.removeBan(user);
+            this.impl.getMCBouncerPlugin().removeBan(user);
         } catch (final APIException e) {
             sender.sendMessage(String.format("Failed to unban %s. %s", user, e.getMessage()));
         }

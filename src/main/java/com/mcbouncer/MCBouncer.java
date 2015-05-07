@@ -24,7 +24,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mcbouncer.api.MCBouncerConfig;
 import com.mcbouncer.api.MCBouncerImplementation;
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
 import com.mcbouncer.models.LoginResult;
 import org.json.JSONObject;
@@ -37,10 +37,10 @@ import java.util.Map;
 
 public class MCBouncer {
 
-    private MCBouncerImplementation impl;
+    private com.mcbouncer.api.MCBouncerImplementation impl;
     private MCBouncerConfig config;
 
-    public MCBouncer(MCBouncerImplementation impl, MCBouncerConfig config) {
+    public MCBouncer(com.mcbouncer.api.MCBouncerImplementation impl, MCBouncerConfig config) {
         this.impl = impl;
         this.config = config;
         this.config.load();
@@ -96,7 +96,7 @@ public class MCBouncer {
         }
     }
 
-    public Player getPlayer(String username) {
+    public MCBouncerPlayer getPlayer(String username) {
         if (username.equalsIgnoreCase("console")) {
             return ConsolePlayer.getInstance();
         }
@@ -165,21 +165,21 @@ public class MCBouncer {
     }
 
     public void addBan(final String username, final String reason, final String issuerName) throws APIException {
-        Player user = this.getPlayer(username);
-        Player issuer = this.getPlayer(issuerName);
+        MCBouncerPlayer user = this.getPlayer(username);
+        MCBouncerPlayer issuer = this.getPlayer(issuerName);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(final String username, final String reason, final Player issuer) throws APIException {
-        Player user = this.getPlayer(username);
+    public void addBan(final String username, final String reason, final MCBouncerPlayer issuer) throws APIException {
+        MCBouncerPlayer user = this.getPlayer(username);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(Player user, final String reason, final Player issuer) throws APIException {
+    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer) throws APIException {
         addBan(user, reason, issuer, null);
     }
 
-    public void addBan(Player user, final String reason, final Player issuer, String expiry) throws APIException {
+    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer, String expiry) throws APIException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("user_id", user.getUniqueID().toString());
         fields.put("username", user.getName());
@@ -193,11 +193,11 @@ public class MCBouncer {
     }
 
     public boolean removeBan(final String username) throws APIException {
-        Player user = this.getPlayer(username);
+        MCBouncerPlayer user = this.getPlayer(username);
         return removeBan(user);
     }
 
-    public boolean removeBan(final Player user) throws APIException {
+    public boolean removeBan(final MCBouncerPlayer user) throws APIException {
         Map<String, String> query = new HashMap<String, String>();
         query.put("user_id", "");
         JSONObject ret = delete("ban", user.getUniqueID().toString(), query);
@@ -206,17 +206,17 @@ public class MCBouncer {
     }
 
     public boolean addNote(final String username, final String note, final String issuerName, boolean global) throws APIException {
-        Player user = this.getPlayer(username);
-        Player issuer = this.getPlayer(issuerName);
+        MCBouncerPlayer user = this.getPlayer(username);
+        MCBouncerPlayer issuer = this.getPlayer(issuerName);
         return addNote(user, note, issuer, global);
     }
 
-    public boolean addNote(final String username, final String note, final Player issuer, boolean global) throws APIException {
-        Player user = this.getPlayer(username);
+    public boolean addNote(final String username, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
+        MCBouncerPlayer user = this.getPlayer(username);
         return addNote(user, note, issuer, global);
     }
 
-    public boolean addNote(Player user, final String note, final Player issuer, boolean global) throws APIException {
+    public boolean addNote(MCBouncerPlayer user, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("username", user.getName());
         fields.put("user_id", user.getUniqueID().toString());
@@ -230,12 +230,12 @@ public class MCBouncer {
     }
 
     public LoginResult login(String username) throws APIException {
-        Player user = this.getPlayer(username);
+        MCBouncerPlayer user = this.getPlayer(username);
 
         return login(user);
     }
 
-    public LoginResult login(Player user) throws APIException {
+    public LoginResult login(MCBouncerPlayer user) throws APIException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("username", user.getName());
         fields.put("user_id", user.getUniqueID().toString());

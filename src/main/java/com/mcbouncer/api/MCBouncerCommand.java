@@ -43,7 +43,7 @@ public abstract class MCBouncerCommand {
         return this.commandName;
     }
 
-    public boolean processCommand(CommandSender sender, String[] args) {
+    public boolean processCommand(MCBouncerCommandSender sender, String[] args) {
         if ((this.permission != null) && (!sender.hasPermission(this.permission))) {
             // TODO: Send error to player
             return true;
@@ -53,5 +53,5 @@ public abstract class MCBouncerCommand {
 
     }
 
-    public abstract boolean onCommand(CommandSender sender, String[] args);
+    public abstract boolean onCommand(MCBouncerCommandSender sender, String[] args);
 }

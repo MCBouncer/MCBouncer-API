@@ -30,9 +30,9 @@ public interface MCBouncerImplementation {
 
     public File getDataFolder();
 
-    public Player getPlayer(String name);
+    public MCBouncerPlayer getPlayer(String name);
 
-    public Player[] getOnlinePlayers();
+    public MCBouncerPlayer[] getOnlinePlayers();
 
     public String getVersion();
 

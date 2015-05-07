@@ -18,31 +18,32 @@
 package com.mcbouncer.commands;
 
 import com.mcbouncer.*;
-import com.mcbouncer.api.CommandSender;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerImplementation;
+import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
 
 public class NoteCommand extends MCBouncerCommand {
 
-    private MCBouncer plugin;
+    private MCBouncerImplementation impl;
 
-    public NoteCommand(MCBouncer plugin) {
+    public NoteCommand(MCBouncerImplementation impl) {
         super("addnote", Perm.COMMAND_NOTE);
-        this.plugin = plugin;
+        this.impl = impl;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
+    public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
         String user = args[0];
-        String note = args.length > 1 ? Util.join(args, " ", 1) : this.plugin.getConfig().getString(Config.MESSAGE_DEFAULT_BAN.toString());
+        String note = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_BAN.toString());
 
-        Player p;
-        if (sender instanceof Player) {
-            p = (Player) sender;
+        MCBouncerPlayer p;
+        if (sender instanceof MCBouncerPlayer) {
+            p = (MCBouncerPlayer) sender;
         } else if (sender.getName().equalsIgnoreCase("console")) {
             p = ConsolePlayer.getInstance();
         } else {
@@ -50,7 +51,7 @@ public class NoteCommand extends MCBouncerCommand {
         }
 
         try {
-            plugin.addNote(user, note, p, false);
+            impl.getMCBouncerPlugin().addNote(user, note, p, false);
         }
         catch (APIException e) {
             // TODO: Add better error message.  This should pull from config.

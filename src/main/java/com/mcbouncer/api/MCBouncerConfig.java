@@ -18,19 +18,18 @@
 package com.mcbouncer.api;
 
 import com.mcbouncer.Config;
-import com.mcbouncer.MCBouncer;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.mcbouncer.api.MCBouncerImplementation;
 
 import java.io.File;
 import java.io.IOException;
 
 public abstract class MCBouncerConfig {
 
-    protected MCBouncer plugin;
+    protected MCBouncerImplementation impl;
     protected File file;
 
-    public MCBouncerConfig(MCBouncer plugin) {
-        this.plugin = plugin;
+    public MCBouncerConfig(MCBouncerImplementation impl) {
+        this.impl = impl;
     }
 
     public abstract void load();

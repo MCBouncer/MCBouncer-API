@@ -18,28 +18,29 @@
 package com.mcbouncer.commands;
 
 import com.mcbouncer.*;
-import com.mcbouncer.api.CommandSender;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerImplementation;
+import com.mcbouncer.api.MCBouncerPlayer;
 
 public class KickCommand extends MCBouncerCommand {
 
-    private MCBouncer plugin;
+    private MCBouncerImplementation impl;
 
-    public KickCommand(MCBouncer plugin) {
+    public KickCommand(MCBouncerImplementation impl) {
         super("kick", Perm.COMMAND_KICK);
-        this.plugin = plugin;
+        this.impl = impl;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
+    public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
         String user = args[0];
-        String reason = args.length > 1 ? Util.join(args, " ", 1) : this.plugin.getConfig().getString(Config.MESSAGE_DEFAULT_KICK.toString());
+        String reason = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_KICK.toString());
 
-        Player p = plugin.getPlayer(user);
+        MCBouncerPlayer p = this.impl.getPlayer(user);
         p.kick(reason);
         return true;
     }

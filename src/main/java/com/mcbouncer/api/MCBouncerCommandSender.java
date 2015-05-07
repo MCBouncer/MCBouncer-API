@@ -19,7 +19,7 @@ package com.mcbouncer.api;
 
 import com.mcbouncer.Perm;
 
-public interface CommandSender {
+public interface MCBouncerCommandSender {
 
     public String getName();
 

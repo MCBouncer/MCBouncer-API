@@ -17,12 +17,12 @@
 
 package com.mcbouncer;
 
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerPlayer;
 
 import java.net.InetAddress;
 import java.util.UUID;
 
-public class ConsolePlayer implements Player {
+public class ConsolePlayer implements MCBouncerPlayer {
 
     UUID uuid = UUID.fromString("00000000-0000-0000-0000-000000000000");
 

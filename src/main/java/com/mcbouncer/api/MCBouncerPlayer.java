@@ -20,7 +20,7 @@ package com.mcbouncer.api;
 import java.net.InetAddress;
 import java.util.UUID;
 
-public interface Player extends CommandSender {
+public interface MCBouncerPlayer extends MCBouncerCommandSender {
     public void kick(String message);
 
     public UUID getUniqueID();

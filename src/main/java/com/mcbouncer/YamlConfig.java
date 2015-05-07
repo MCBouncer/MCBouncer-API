@@ -18,6 +18,7 @@
 package com.mcbouncer;
 
 import com.mcbouncer.api.MCBouncerConfig;
+import com.mcbouncer.api.MCBouncerImplementation;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -31,8 +32,8 @@ public class YamlConfig extends MCBouncerConfig {
 
     private Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-    public YamlConfig(MCBouncer plugin) {
-        super(plugin);
+    public YamlConfig(MCBouncerImplementation impl) {
+        super(impl);
     }
 
     @Override
@@ -42,10 +43,10 @@ public class YamlConfig extends MCBouncerConfig {
 
     @Override
     public void load(String filename) {
-        this.file = new File(this.plugin.getDataFolder(), filename);
+        this.file = new File(this.impl.getDataFolder(), filename);
 
         if (!this.file.exists()) {
-            this.plugin.saveResource(filename, false);
+            this.impl.getMCBouncerPlugin().saveResource(filename, false);
         }
     }
 

@@ -18,21 +18,21 @@
 package com.mcbouncer.commands;
 
 import com.mcbouncer.*;
-import com.mcbouncer.api.CommandSender;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
-import com.mcbouncer.api.Player;
+import com.mcbouncer.api.MCBouncerImplementation;
 
 public class LookupCommand extends MCBouncerCommand {
 
-    private MCBouncer plugin;
+    private MCBouncerImplementation impl;
 
-    public LookupCommand(MCBouncer plugin) {
+    public LookupCommand(MCBouncerImplementation impl) {
         super("lookup", Perm.COMMAND_LOOKUP);
-        this.plugin = plugin;
+        this.impl = impl;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
+    public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
