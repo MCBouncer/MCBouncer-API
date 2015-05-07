@@ -37,10 +37,10 @@ import java.util.Map;
 
 public class MCBouncer {
 
-    private com.mcbouncer.api.MCBouncerImplementation impl;
+    private MCBouncerImplementation impl;
     private MCBouncerConfig config;
 
-    public MCBouncer(com.mcbouncer.api.MCBouncerImplementation impl, MCBouncerConfig config) {
+    public MCBouncer(MCBouncerImplementation impl, MCBouncerConfig config) {
         this.impl = impl;
         this.config = config;
         this.config.load();
