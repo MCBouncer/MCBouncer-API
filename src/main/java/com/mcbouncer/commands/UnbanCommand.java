@@ -41,6 +41,7 @@ public class UnbanCommand extends MCBouncerCommand {
 
         try {
             this.impl.getMCBouncerPlugin().removeBan(user);
+            sender.sendMessage(String.format("%s successfully unbanned.", user));
         } catch (final APIException e) {
             sender.sendMessage(String.format("Failed to unban %s. %s", user, e.getMessage()));
         }
