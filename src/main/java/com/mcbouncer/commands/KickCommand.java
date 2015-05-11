@@ -40,7 +40,7 @@ public class KickCommand extends MCBouncerCommand {
         String user = args[0];
         String reason = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_KICK.toString());
 
-        MCBouncerPlayer p = this.impl.getPlayer(user);
+        MCBouncerPlayer p = this.impl.getOfflinePlayer(user);
         p.kick(reason);
         return true;
     }
