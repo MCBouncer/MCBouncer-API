@@ -21,10 +21,7 @@ import com.mcbouncer.api.MCBouncerConfig;
 import com.mcbouncer.api.MCBouncerImplementation;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,6 +45,16 @@ public class YamlConfig extends MCBouncerConfig {
         if (!this.file.exists()) {
             this.impl.getMCBouncerPlugin().saveResource(filename, false);
         }
+
+        Yaml yaml = new Yaml();
+        try {
+            InputStreamReader reader = new FileReader(this.file);
+            this.map = (Map<String, Object>) yaml.load(reader);
+        }
+        catch (IOException e) {
+
+        }
+
     }
 
     @Override
