@@ -30,13 +30,13 @@ public interface MCBouncerImplementation {
 
     public File getDataFolder();
 
-    public MCBouncerPlayer getPlayer(String name);
+    public MCBouncerPlayer getOfflinePlayer(String name);
 
     public MCBouncerPlayer[] getOnlinePlayers();
 
     public String getVersion();
 
-    public void sendMessage(final String permission, final String message);
+    public void broadcast(final String permission, final String message);
 
     public MCBouncer getMCBouncerPlugin();
 }
