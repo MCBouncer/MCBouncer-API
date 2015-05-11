@@ -26,7 +26,9 @@ import com.mcbouncer.api.MCBouncerConfig;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
+import com.mcbouncer.exceptions.MCBouncerException;
 import com.mcbouncer.models.LoginResult;
+import com.mcbouncer.models.LookupResult;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -43,7 +45,6 @@ public class MCBouncer {
     public MCBouncer(MCBouncerImplementation impl, MCBouncerConfig config) {
         this.impl = impl;
         this.config = config;
-        this.config.load();
     }
 
     public MCBouncerConfig getConfig() {
@@ -96,15 +97,16 @@ public class MCBouncer {
         }
     }
 
-    public MCBouncerPlayer getPlayer(String username) {
+    public MCBouncerPlayer getOfflinePlayer(String username) {
         if (username.equalsIgnoreCase("console")) {
             return ConsolePlayer.getInstance();
         }
-        return this.impl.getPlayer(username);
+        return this.impl.getOfflinePlayer(username);
     }
 
     private JSONObject post(String resource, final Map<String, Object> fields) throws APIException {
         String url = String.format("%s/api/v2/%s", getConfig().getString(Config.WEBSITE), resource);
+        System.out.println(url);
         HttpRequestWithBody req = Unirest.post(url);
         req.header("Authorization", "APIKey " + getConfig().getString(Config.APIKEY));
 
@@ -164,22 +166,25 @@ public class MCBouncer {
         }
     }
 
-    public void addBan(final String username, final String reason, final String issuerName) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
-        MCBouncerPlayer issuer = this.getPlayer(issuerName);
+    public void addBan(final String username, final String reason, final String issuerName) throws APIException, MCBouncerException {
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
+        MCBouncerPlayer issuer = this.getOfflinePlayer(issuerName);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(final String username, final String reason, final MCBouncerPlayer issuer) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
+    public void addBan(final String username, final String reason, final MCBouncerPlayer issuer) throws APIException, MCBouncerException {
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
         addBan(user, reason, issuer);
     }
 
-    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer) throws APIException {
+    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer) throws APIException, MCBouncerException {
         addBan(user, reason, issuer, null);
     }
 
-    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer, String expiry) throws APIException {
+    public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer, String expiry) throws APIException, MCBouncerException {
+        if (user == null) {
+            throw new MCBouncerException("User provided is not a valid minecraft account.");
+        }
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("user_id", user.getUniqueID().toString());
         fields.put("username", user.getName());
@@ -189,11 +194,11 @@ public class MCBouncer {
             fields.put("expiry", expiry);
         }
 
-        JSONObject ret = post("bans", fields);
+        JSONObject ret = post("ban", fields);
     }
 
     public boolean removeBan(final String username) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
         return removeBan(user);
     }
 
@@ -206,13 +211,13 @@ public class MCBouncer {
     }
 
     public boolean addNote(final String username, final String note, final String issuerName, boolean global) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
-        MCBouncerPlayer issuer = this.getPlayer(issuerName);
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
+        MCBouncerPlayer issuer = this.getOfflinePlayer(issuerName);
         return addNote(user, note, issuer, global);
     }
 
     public boolean addNote(final String username, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
         return addNote(user, note, issuer, global);
     }
 
@@ -229,8 +234,27 @@ public class MCBouncer {
         return ret.getBoolean("success");
     }
 
+    public LookupResult lookup(String username) throws APIException {
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
+
+        return lookup(user);
+    }
+
+    public LookupResult lookup(MCBouncerPlayer user) throws APIException {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("user_id", user.getUniqueID().toString());
+
+        if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS)) {
+            fields.put("ipaddress", user.getIPAddress().toString());
+        }
+
+        JSONObject ret = post("lookup", fields);
+
+        return new LookupResult(ret);
+    }
+
     public LoginResult login(String username) throws APIException {
-        MCBouncerPlayer user = this.getPlayer(username);
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
 
         return login(user);
     }
