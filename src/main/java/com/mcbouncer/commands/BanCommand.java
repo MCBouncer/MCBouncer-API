@@ -23,6 +23,7 @@ import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
+import com.mcbouncer.exceptions.MCBouncerException;
 
 public class BanCommand extends MCBouncerCommand {
 
@@ -54,8 +55,11 @@ public class BanCommand extends MCBouncerCommand {
             impl.getMCBouncerPlugin().addBan(user, reason, p);
         }
         catch (APIException e) {
-            // TODO: Better error message
-            sender.sendMessage("ERROR!");
+            sender.sendMessage("[MCBouncer - ERROR] " + e.getMessage());
+            e.getCause().printStackTrace();
+        }
+        catch (MCBouncerException e) {
+            sender.sendMessage("[MCBouncer - ERROR] " + e.getMessage());
         }
         return true;
     }
