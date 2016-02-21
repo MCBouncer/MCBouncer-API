@@ -20,6 +20,7 @@ package com.mcbouncer;
 import com.mcbouncer.api.MCBouncerPlayer;
 
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.UUID;
 
 public class ConsolePlayer implements MCBouncerPlayer {
@@ -37,6 +38,11 @@ public class ConsolePlayer implements MCBouncerPlayer {
 
     public InetAddress getIPAddress() {
         return InetAddress.getLoopbackAddress();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return false;
     }
 
     public void kick(String message) {
@@ -58,4 +64,5 @@ public class ConsolePlayer implements MCBouncerPlayer {
     public void sendMessage(String message) {
 
     }
+
 }

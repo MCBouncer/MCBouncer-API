@@ -23,6 +23,8 @@ import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.exceptions.APIException;
 
+import java.util.HashMap;
+
 public class UnbanCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
@@ -39,11 +41,14 @@ public class UnbanCommand extends MCBouncerCommand {
         }
         String user = args[0];
 
+        HashMap<String, String> params = new HashMap<>();
+        params.put("username", user);
         try {
             this.impl.getMCBouncerPlugin().removeBan(user);
-            sender.sendMessage(String.format("%s successfully unbanned.", user));
+            Util.messageSender(impl, sender,Config.MESSAGE_BAN_DEL_SUCCESS, params);
         } catch (final APIException e) {
-            sender.sendMessage(String.format("Failed to unban %s. %s", user, e.getMessage()));
+            params.put("error_msg", e.getMessage());
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_DEL_FAILURE, params);
         }
         return true;
     }

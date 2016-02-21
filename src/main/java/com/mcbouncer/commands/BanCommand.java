@@ -25,6 +25,8 @@ import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
 import com.mcbouncer.exceptions.MCBouncerException;
 
+import java.util.HashMap;
+
 public class BanCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
@@ -39,8 +41,13 @@ public class BanCommand extends MCBouncerCommand {
         if (args.length == 0) {
             return false;
         }
+        HashMap<String, String> messageParams = new HashMap<>();
+
+
         String user = args[0];
         String reason = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_BAN.toString());
+
+        messageParams.put("username", user);
 
         MCBouncerPlayer p;
         if (sender instanceof MCBouncerPlayer) {
@@ -53,13 +60,17 @@ public class BanCommand extends MCBouncerCommand {
 
         try {
             impl.getMCBouncerPlugin().addBan(user, reason, p);
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_DEL_SUCCESS, messageParams);
         }
         catch (APIException e) {
+            messageParams.put("error_msg", e.getMessage());
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_FAILURE, messageParams);
             sender.sendMessage("[MCBouncer - ERROR] " + e.getMessage());
             e.getCause().printStackTrace();
         }
         catch (MCBouncerException e) {
-            sender.sendMessage("[MCBouncer - ERROR] " + e.getMessage());
+            messageParams.put("error_msg", e.getMessage());
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_FAILURE, messageParams);
         }
         return true;
     }

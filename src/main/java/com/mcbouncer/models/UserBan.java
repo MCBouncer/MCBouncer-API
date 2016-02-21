@@ -38,10 +38,20 @@ public class UserBan {
     public UserBan(JSONObject obj) {
         userId = obj.getString("user_id");
         username = obj.getString("username");
-        bannedAs = obj.getString("banned_as");
+        if (!obj.isNull("banned_as")) {
+            bannedAs = obj.getString("banned_as");
+        }
+        else {
+            bannedAs = null;
+        }
         reason = obj.getString("reason");
         timeBanned = Util.parseDate(obj.getString("time_banned"));
-        expiry = Util.parseDate(obj.getString("expiry"));
+        if (!obj.isNull("expiry")) {
+            expiry = Util.parseDate(obj.getString("expiry"));
+        }
+        else {
+            expiry = null;
+        }
         issuerUsername = obj.getString("issuer_username");
         issuerId = obj.getString("issuer_id");
         server = obj.getString("server");

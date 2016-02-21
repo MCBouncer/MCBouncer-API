@@ -210,18 +210,18 @@ public class MCBouncer {
         return ret.getBoolean("success");
     }
 
-    public boolean addNote(final String username, final String note, final String issuerName, boolean global) throws APIException {
+    public int addNote(final String username, final String note, final String issuerName, boolean global) throws APIException {
         MCBouncerPlayer user = this.getOfflinePlayer(username);
         MCBouncerPlayer issuer = this.getOfflinePlayer(issuerName);
         return addNote(user, note, issuer, global);
     }
 
-    public boolean addNote(final String username, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
+    public int addNote(final String username, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
         MCBouncerPlayer user = this.getOfflinePlayer(username);
         return addNote(user, note, issuer, global);
     }
 
-    public boolean addNote(MCBouncerPlayer user, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
+    public int addNote(MCBouncerPlayer user, final String note, final MCBouncerPlayer issuer, boolean global) throws APIException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("username", user.getName());
         fields.put("user_id", user.getUniqueID().toString());
@@ -231,7 +231,7 @@ public class MCBouncer {
 
         JSONObject ret = post("notes", fields);
 
-        return ret.getBoolean("success");
+        return ret.getInt("note_id");
     }
 
     public LookupResult lookup(String username) throws APIException {
@@ -244,8 +244,8 @@ public class MCBouncer {
         Map<String, Object> fields = new HashMap<>();
         fields.put("user_id", user.getUniqueID().toString());
 
-        if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS)) {
-            fields.put("ipaddress", user.getIPAddress().toString());
+        if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS) && user.isOnline()) {
+            fields.put("ipaddress", user.getIPAddress().getHostAddress());
         }
 
         JSONObject ret = post("lookup", fields);
@@ -265,7 +265,7 @@ public class MCBouncer {
         fields.put("user_id", user.getUniqueID().toString());
 
         if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS)) {
-            fields.put("ipaddress", user.getIPAddress().toString());
+            fields.put("ipaddress", user.getIPAddress().getHostAddress());
         }
 
         JSONObject ret = post("login", fields);

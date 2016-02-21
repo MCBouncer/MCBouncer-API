@@ -41,9 +41,10 @@ public class LookupResult {
         ipBanCount = result.getInt("ipban_count");
         noteCount = result.getInt("note_count");
         if (banned) {
-            banReason = result.getString("reason");
-            issuer = result.getString("issuer");
-            issuerId = result.getString("issuer_id");
+            JSONObject ban = result.getJSONObject("ban");
+            banReason = ban.getString("reason");
+            issuer = ban.getString("issuer");
+            issuerId = ban.getString("issuer_id");
         }
 
         JSONArray _bans = result.getJSONArray("bans");

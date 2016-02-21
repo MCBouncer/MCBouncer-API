@@ -17,14 +17,38 @@
 
 package com.mcbouncer;
 
+import com.mcbouncer.api.MCBouncerCommandSender;
+import com.mcbouncer.api.MCBouncerImplementation;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class Util {
     
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     static SimpleDateFormat dateFormatWithTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+    public static void messageSender(MCBouncerImplementation impl, MCBouncerCommandSender sender, Config config, Map<String, String> params) {
+        // TODO: Format the string
+        String message = buildMessage(impl.getMCBouncerPlugin().getConfig().getString(config), params);
+        sender.sendMessage(message);
+    }
+
+    public static String buildMessage(String inputMessage, Map<String, String> params) {
+        String message = inputMessage;
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            message = message.replace("{{" + key + "}}", value);
+        }
+
+        //message = ChatColor.translateAlternateColorCodes('&', message);
+        return message;
+    }
 
     public static Date parseDate(String dateStr) {
         if (dateStr == null) {

@@ -18,11 +18,14 @@
 package com.mcbouncer.api;
 
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.UUID;
 
 public interface MCBouncerPlayer extends MCBouncerCommandSender {
-    public void kick(String message);
+    void kick(String message);
 
-    public UUID getUniqueID();
-    public InetAddress getIPAddress();
+    UUID getUniqueID();
+    InetAddress getIPAddress();
+    boolean isOnline();
+
 }

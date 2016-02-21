@@ -42,12 +42,12 @@ public enum Config {
     private final String key;
     private final Object def;
 
-    private Config(String key, Object def) {
+    Config(String key, Object def) {
         this.key = key;
         this.def = def;
     }
 
-    private Config(Object def) {
+    Config(Object def) {
         this.key = this.name().toLowerCase().replace("_", ".");
         this.def = def;
     }

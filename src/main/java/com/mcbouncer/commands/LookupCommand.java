@@ -21,6 +21,10 @@ import com.mcbouncer.*;
 import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.MCBouncerImplementation;
+import com.mcbouncer.api.MCBouncerPlayer;
+import com.mcbouncer.exceptions.APIException;
+import com.mcbouncer.models.LookupResult;
+import com.mcbouncer.models.UserBan;
 
 public class LookupCommand extends MCBouncerCommand {
 
@@ -36,7 +40,20 @@ public class LookupCommand extends MCBouncerCommand {
         if (args.length == 0) {
             return false;
         }
-        String user = args[0];
+        String username = args[0];
+
+        MCBouncerPlayer user = this.impl.getOfflinePlayer(username);
+
+        try {
+            LookupResult result = this.impl.getMCBouncerPlugin().lookup(user);
+
+            sender.sendMessage(String.format("%d bans, %d notes", result.getBanCount(), result.getNoteCount()));
+            for (UserBan ban : result.getBans()) {
+                sender.sendMessage(String.format("%s by %s", ban.getReason(), ban.getIssuerUsername()));
+            }
+        } catch (APIException e) {
+            e.printStackTrace();
+        }
 
         //int banCount = plugin.getBanCount(user);
         //int noteCount = plugin.getNoteCount(user);
@@ -44,3 +61,4 @@ public class LookupCommand extends MCBouncerCommand {
         return true;
     }
 }
+

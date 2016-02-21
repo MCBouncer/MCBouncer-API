@@ -19,11 +19,14 @@ package com.mcbouncer.api;
 
 import com.mcbouncer.Perm;
 
+import java.util.Map;
+
 public interface MCBouncerCommandSender {
 
-    public String getName();
+    String getName();
 
-    public Boolean hasPermission(Perm permission);
+    Boolean hasPermission(Perm permission);
 
-    public void sendMessage(String message);
+    void sendMessage(String message);
+
 }
