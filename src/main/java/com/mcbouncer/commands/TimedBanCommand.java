@@ -17,33 +17,38 @@
 
 package com.mcbouncer.commands;
 
-import com.mcbouncer.*;
-import com.mcbouncer.api.MCBouncerCommandSender;
+import com.mcbouncer.Config;
+import com.mcbouncer.ConsolePlayer;
+import com.mcbouncer.Perm;
+import com.mcbouncer.Util;
 import com.mcbouncer.api.MCBouncerCommand;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
+import com.mcbouncer.exceptions.MCBouncerException;
 
 import java.util.HashMap;
 
-public class NoteCommand extends MCBouncerCommand {
+public class TimedBanCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
 
-    public NoteCommand(MCBouncerImplementation impl) {
-        super("addnote", Perm.COMMAND_NOTE);
-        this.impl = impl;
+    public TimedBanCommand(MCBouncerImplementation plugin) {
+        super("timedban", Perm.COMMAND_BAN, "tban", "tempban");
+        this.impl = plugin;
     }
 
-    @Override
     public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length < 2) {
             return false;
         }
-        String user = args[0];
-        String note = Util.join(args, " ", 1);
-
         HashMap<String, String> messageParams = new HashMap<>();
+
+
+        String user = args[0];
+        String duration = args[1];
+        String reason = args.length > 2 ? Util.join(args, " ", 2) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_BAN.toString());
 
         messageParams.put("username", user);
 
@@ -57,24 +62,31 @@ public class NoteCommand extends MCBouncerCommand {
         }
 
         try {
-            int note_id = impl.getMCBouncerPlugin().addNote(user, note, p, false);
-            messageParams.put("note_id", String.valueOf(note_id));
-            Util.messageSender(impl, sender, Config.MESSAGE_NOTE_ADD_SUCCESS, messageParams);
+            impl.getMCBouncerPlugin().addBan(user, reason, p, duration);
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_SUCCESS, messageParams);
 
-            boolean broadcastMessage = this.impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_NOTE_MESSAGES);
+            boolean broadcastMessage = this.impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_BAN_MESSAGES);
+            messageParams.put("issuer", p.getName());
+            messageParams.put("reason", reason);
+
             Perm perm = null;
             if (!broadcastMessage) {
-                perm = Perm.MESSAGE_ADD_NOTE;
+                perm = Perm.MESSAGE_BAN;
             }
 
-            messageParams.put("note", note);
-            messageParams.put("issuer", p.getName());
+            Util.broadcastMessage(impl, perm, Config.MESSAGE_BAN_BROADCAST, messageParams);
 
-            Util.broadcastMessage(impl, perm, Config.MESSAGE_NOTE_BROADCAST, messageParams);
+            if (p.isOnline()) {
+                p.kick("Banned: " + reason);
+            }
         }
         catch (APIException e) {
             messageParams.put("error_msg", e.getMessage());
-            Util.messageSender(impl, sender, Config.MESSAGE_NOTE_ADD_FAILURE, messageParams);
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_FAILURE, messageParams);
+        }
+        catch (MCBouncerException e) {
+            messageParams.put("error_msg", e.getMessage());
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_FAILURE, messageParams);
         }
         return true;
     }

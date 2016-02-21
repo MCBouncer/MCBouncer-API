@@ -60,7 +60,22 @@ public class BanCommand extends MCBouncerCommand {
 
         try {
             impl.getMCBouncerPlugin().addBan(user, reason, p);
-            Util.messageSender(impl, sender, Config.MESSAGE_BAN_DEL_SUCCESS, messageParams);
+            Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_SUCCESS, messageParams);
+
+            boolean broadcastMessage = this.impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_BAN_MESSAGES);
+            messageParams.put("issuer", p.getName());
+            messageParams.put("reason", reason);
+
+            Perm perm = null;
+            if (!broadcastMessage) {
+                perm = Perm.MESSAGE_BAN;
+            }
+
+            Util.broadcastMessage(impl, perm, Config.MESSAGE_BAN_BROADCAST, messageParams);
+
+            if (p.isOnline()) {
+                p.kick("Banned: " + reason);
+            }
         }
         catch (APIException e) {
             messageParams.put("error_msg", e.getMessage());

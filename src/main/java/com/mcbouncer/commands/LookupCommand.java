@@ -24,7 +24,10 @@ import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.MCBouncerPlayer;
 import com.mcbouncer.exceptions.APIException;
 import com.mcbouncer.models.LookupResult;
+import com.mcbouncer.models.Note;
 import com.mcbouncer.models.UserBan;
+
+import java.util.HashMap;
 
 public class LookupCommand extends MCBouncerCommand {
 
@@ -42,14 +45,46 @@ public class LookupCommand extends MCBouncerCommand {
         }
         String username = args[0];
 
+        HashMap<String, String> messageParams = new HashMap<>();
+
+        messageParams.put("username", username);
+
         MCBouncerPlayer user = this.impl.getOfflinePlayer(username);
 
         try {
             LookupResult result = this.impl.getMCBouncerPlugin().lookup(user);
 
-            sender.sendMessage(String.format("%d bans, %d notes", result.getBanCount(), result.getNoteCount()));
+            messageParams.put("num_bans", String.valueOf(result.getBanCount()));
+            messageParams.put("num_notes", String.valueOf(result.getNoteCount()));
+            Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_HEADER, messageParams);
+            messageParams.remove("num_bans");
+            messageParams.remove("num_notes");
+            int id = 1;
             for (UserBan ban : result.getBans()) {
-                sender.sendMessage(String.format("%s by %s", ban.getReason(), ban.getIssuerUsername()));
+                messageParams.put("ban_id", String.valueOf(id));
+                messageParams.put("server", ban.getServer());
+                messageParams.put("issuer", ban.getIssuerUsername());
+                messageParams.put("reason", ban.getReason());
+                String date = Util.dateToString(impl, ban.getTimeBanned());
+                messageParams.put("time", date);
+                if (ban.getExpiry() != null) {
+                    messageParams.put("expiry", "expires");
+                    Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_BAN_WITH_EXPIRY, messageParams);
+                } else {
+                    Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_BAN, messageParams);
+                }
+                id++;
+            }
+            messageParams.remove("ban_id");
+
+            for (Note note : result.getNotes()) {
+                messageParams.put("note_id", String.valueOf(note.getNoteId()));
+                messageParams.put("server", note.getServer());
+                messageParams.put("issuer", note.getIssuerUsername());
+                messageParams.put("note", note.getNote());
+                String date = Util.dateToString(impl, note.getTimeAdded());
+                messageParams.put("time", date);
+                Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_NOTE, messageParams);
             }
         } catch (APIException e) {
             e.printStackTrace();

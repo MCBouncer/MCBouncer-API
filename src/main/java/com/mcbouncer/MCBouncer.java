@@ -172,9 +172,20 @@ public class MCBouncer {
         addBan(user, reason, issuer);
     }
 
+    public void addBan(final String username, final String reason, final String issuerName, String expiry) throws APIException, MCBouncerException {
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
+        MCBouncerPlayer issuer = this.getOfflinePlayer(issuerName);
+        addBan(user, reason, issuer);
+    }
+
     public void addBan(final String username, final String reason, final MCBouncerPlayer issuer) throws APIException, MCBouncerException {
         MCBouncerPlayer user = this.getOfflinePlayer(username);
         addBan(user, reason, issuer);
+    }
+
+    public void addBan(final String username, final String reason, final MCBouncerPlayer issuer, String expiry) throws APIException, MCBouncerException {
+        MCBouncerPlayer user = this.getOfflinePlayer(username);
+        addBan(user, reason, issuer, expiry);
     }
 
     public void addBan(MCBouncerPlayer user, final String reason, final MCBouncerPlayer issuer) throws APIException, MCBouncerException {
@@ -229,9 +240,15 @@ public class MCBouncer {
         fields.put("issuer_id", issuer.getUniqueID().toString());
         fields.put("global", global);
 
-        JSONObject ret = post("notes", fields);
+        JSONObject ret = post("note", fields);
 
         return ret.getInt("note_id");
+    }
+
+    public boolean removeNote(final int note_id) throws APIException {
+        JSONObject ret = delete("note", String.valueOf(note_id));
+
+        return ret.getBoolean("success");
     }
 
     public LookupResult lookup(String username) throws APIException {

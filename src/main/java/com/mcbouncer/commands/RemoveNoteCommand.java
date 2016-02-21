@@ -17,39 +17,47 @@
 
 package com.mcbouncer.commands;
 
-import com.mcbouncer.*;
-import com.mcbouncer.api.MCBouncerCommandSender;
+import com.mcbouncer.Config;
+import com.mcbouncer.Perm;
+import com.mcbouncer.Util;
 import com.mcbouncer.api.MCBouncerCommand;
+import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.exceptions.APIException;
 
 import java.util.HashMap;
 
-public class UnbanCommand extends MCBouncerCommand {
+public class RemoveNoteCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
 
-    public UnbanCommand(MCBouncerImplementation impl) {
-        super("unban", Perm.COMMAND_UNBAN, "delban");
+    public RemoveNoteCommand(MCBouncerImplementation impl) {
+        super("removenote", Perm.COMMAND_REMOVE_NOTE, "delnote");
         this.impl = impl;
     }
 
-    @Override
     public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
-        String user = args[0];
 
         HashMap<String, String> messageParams = new HashMap<>();
-        messageParams.put("username", user);
+
+        messageParams.put("note_id", args[0]);
+
         try {
-            this.impl.getMCBouncerPlugin().removeBan(user);
-            Util.messageSender(impl, sender,Config.MESSAGE_BAN_DEL_SUCCESS, messageParams);
-        } catch (final APIException e) {
-            messageParams.put("error_msg", e.getMessage());
-            Util.messageSender(impl, sender, Config.MESSAGE_BAN_DEL_FAILURE, messageParams);
+            int note_id = Integer.parseInt(args[0]);
+            this.impl.getMCBouncerPlugin().removeNote(note_id);
+            Util.messageSender(impl, sender, Config.MESSAGE_NOTE_DEL_SUCCESS, messageParams);
         }
+        catch (NumberFormatException ex) {
+            messageParams.put("error_msg", "Note id must be a number");
+            Util.messageSender(impl, sender, Config.MESSAGE_NOTE_DEL_FAILURE, messageParams);
+        } catch (APIException e) {
+            messageParams.put("error_msg", e.getMessage());
+            Util.messageSender(impl, sender, Config.MESSAGE_NOTE_DEL_FAILURE, messageParams);
+        }
+
         return true;
     }
 }

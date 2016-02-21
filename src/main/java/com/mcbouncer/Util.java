@@ -29,11 +29,23 @@ public class Util {
     
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     static SimpleDateFormat dateFormatWithTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    static SimpleDateFormat displayDate = new SimpleDateFormat("");
 
     public static void messageSender(MCBouncerImplementation impl, MCBouncerCommandSender sender, Config config, Map<String, String> params) {
-        // TODO: Format the string
         String message = buildMessage(impl.getMCBouncerPlugin().getConfig().getString(config), params);
         sender.sendMessage(message);
+    }
+
+    public static void broadcastMessage(MCBouncerImplementation impl, Config config, Map<String, String> params) {
+        broadcastMessage(impl, null, config, params);
+    }
+
+    public static void broadcastMessage(MCBouncerImplementation impl, Perm permission, Config config, Map<String, String> params) {
+        String message = buildMessage(impl.getMCBouncerPlugin().getConfig().getString(config), params);
+
+        if (permission == null) {
+            impl.broadcast(permission.toString(), message);
+        }
     }
 
     public static String buildMessage(String inputMessage, Map<String, String> params) {
@@ -67,11 +79,17 @@ public class Util {
         return d;
     }
 
+    public static String dateToString(MCBouncerImplementation impl, Date date) {
+        String dateFormat = impl.getMCBouncerPlugin().getConfig().getString(Config.DATE_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        return format.format(date);
+    }
+
     public static String join(String[] strings, String separator, int index) {
         StringBuilder s = new StringBuilder("");
         for (int i = index; i < strings.length; i++) {
             s.append(strings[i]);
-            if (i <= strings.length - 1) {
+            if (i < strings.length - 1) {
                 s.append(separator);
             }
         }

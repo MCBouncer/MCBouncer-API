@@ -27,12 +27,14 @@ public enum Perm {
     COMMAND_LOOKUP,
     COMMAND_RELOAD,
     COMMAND_UNBAN,
+    COMMAND_REMOVE_NOTE,
 
     /* Messaging */
     MESSAGE_BAN,
     MESSAGE_KICK,
     MESSAGE_RELOAD,
-    MESSAGE_UNBAN;
+    MESSAGE_UNBAN,
+    MESSAGE_ADD_NOTE;
 
     private final String perm;
 

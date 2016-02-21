@@ -37,11 +37,11 @@ public class GlobalNoteCommand extends MCBouncerCommand {
 
     @Override
     public boolean onCommand(MCBouncerCommandSender sender, String[] args) {
-        if (args.length == 0) {
+        if (args.length < 2) {
             return false;
         }
         String user = args[0];
-        String note = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_BAN.toString());
+        String note = Util.join(args, " ", 1);
 
         HashMap<String, String> messageParams = new HashMap<>();
 
@@ -60,6 +60,17 @@ public class GlobalNoteCommand extends MCBouncerCommand {
             int note_id = impl.getMCBouncerPlugin().addNote(user, note, p, true);
             messageParams.put("note_id", String.valueOf(note_id));
             Util.messageSender(impl, sender, Config.MESSAGE_NOTE_ADD_SUCCESS, messageParams);
+
+            boolean broadcastMessage = this.impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_NOTE_MESSAGES);
+            Perm perm = null;
+            if (!broadcastMessage) {
+                perm = Perm.MESSAGE_ADD_NOTE;
+            }
+
+            messageParams.put("note", note);
+            messageParams.put("issuer", p.getName());
+
+            Util.broadcastMessage(impl, perm, Config.MESSAGE_NOTE_BROADCAST, messageParams);
         }
         catch (APIException e) {
             messageParams.put("error_msg", e.getMessage());

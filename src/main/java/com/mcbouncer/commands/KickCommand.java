@@ -23,6 +23,8 @@ import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.api.MCBouncerPlayer;
 
+import java.util.HashMap;
+
 public class KickCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
@@ -40,10 +42,30 @@ public class KickCommand extends MCBouncerCommand {
         String user = args[0];
         String reason = args.length > 1 ? Util.join(args, " ", 1) : this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_DEFAULT_KICK.toString());
 
+        HashMap<String, String> messageParams = new HashMap<>();
+
+        messageParams.put("username", user);
+
         MCBouncerPlayer p = this.impl.getOfflinePlayer(user);
 
         if (p.isOnline()) {
             p.kick(reason);
+            Util.messageSender(impl, sender, Config.MESSAGE_KICK_SUCCESS, messageParams);
+
+            boolean broadcastMessage = impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_KICK_MESSAGES);
+            messageParams.put("issuer", sender.getName());
+            messageParams.put("reason", reason);
+
+            Perm perm = null;
+            if (!broadcastMessage) {
+                perm = Perm.MESSAGE_KICK;
+            }
+
+            Util.broadcastMessage(impl, perm, Config.MESSAGE_KICK_BROADCAST, messageParams);
+
+        } else {
+            messageParams.put("error_msg", "Player not online");
+            Util.messageSender(impl, sender, Config.MESSAGE_KICK_FAILURE, messageParams);
         }
         return true;
     }

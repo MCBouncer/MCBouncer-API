@@ -38,5 +38,7 @@ public interface MCBouncerImplementation {
 
     public void broadcast(final String permission, final String message);
 
+    public void broadcast(final String message);
+
     public MCBouncer getMCBouncerPlugin();
 }
