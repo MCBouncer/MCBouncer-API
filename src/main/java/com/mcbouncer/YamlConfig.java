@@ -19,6 +19,7 @@ package com.mcbouncer;
 
 import com.mcbouncer.api.MCBouncerConfig;
 import com.mcbouncer.api.MCBouncerImplementation;
+import com.mcbouncer.exceptions.MCBouncerException;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -34,12 +35,12 @@ public class YamlConfig extends MCBouncerConfig {
     }
 
     @Override
-    public void load() {
+    public void load() throws MCBouncerException {
         load("config.yml");
     }
 
     @Override
-    public void load(String filename) {
+    public void load(String filename) throws MCBouncerException {
         this.file = new File(this.impl.getDataFolder(), filename);
 
         if (!this.file.exists()) {
@@ -52,7 +53,7 @@ public class YamlConfig extends MCBouncerConfig {
             this.map = (Map<String, Object>) yaml.load(reader);
         }
         catch (IOException e) {
-
+            throw new MCBouncerException("Failed to load configuration", e);
         }
 
     }

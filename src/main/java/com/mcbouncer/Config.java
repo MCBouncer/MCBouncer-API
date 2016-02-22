@@ -40,11 +40,13 @@ public enum Config {
     MESSAGE_NOTE_DEL_FAILURE("messages.note.delete-failure", "&4Failed to remove note {{note_id}}: {{error_msg}}."),
     MESSAGE_LOOKUP_HEADER("messages.lookup.header", "&3{{username}} has {{num_bans}} ban(s) and {{num_notes}} note(s)."),
     MESSAGE_LOOKUP_BAN("messages.lookup.ban", "&9Ban #{{ban_id}}: {{server}} ({{issuer}}) [{{reason}}] {{time}}."),
-    MESSAGE_LOOKUP_BAN_WITH_EXPIRY("messages.lookup.ban-with-expiry", "&9Ban ${{ban_id}}: {{server}} ({{issuer}}) [{{reason}}] {{time}} {{expiry}}"),
+    MESSAGE_LOOKUP_BAN_WITH_EXPIRY("messages.lookup.ban-with-expiry", "&9Ban #{{ban_id}}: {{server}} ({{issuer}}) [{{reason}}] {{time}} {{expiry}}"),
     MESSAGE_LOOKUP_NOTE("messages.lookup.note", "&9Note #{{note_id}}: {{server}} ({{issuer}}) [{{note}}] {{time}}."),
     MESSAGE_KICK_SUCCESS("messages.kick.success", "&2{{username}} was kicked successfully"),
     MESSAGE_KICK_FAILURE("messages.kick.failure", "&4Failed to kick {{username}}: {{error_msg}}"),
     MESSAGE_KICK_BROADCAST("messages.kick.broadcast", "&2{{username}} was kicked by {{issuer}} for {{reason}}"),
+    MESSAGE_RELOAD_SUCCESS("messages.reload.success", "&2Reloaded the MCBouncer configuration successfully."),
+    MESSAGE_RELOAD_BROADCAST("messages.reload.broadcast", "&2{{issuer}} reloaded the MCBouncer configuration"),
     DATE_FORMAT("date-format", "MMM.d.YYYY@HH:mm:ss");
 
     private final String key;

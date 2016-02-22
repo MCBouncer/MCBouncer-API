@@ -68,7 +68,7 @@ public class LookupCommand extends MCBouncerCommand {
                 String date = Util.dateToString(impl, ban.getTimeBanned());
                 messageParams.put("time", date);
                 if (ban.getExpiry() != null) {
-                    messageParams.put("expiry", "expires");
+                    messageParams.put("expiry", String.valueOf(ban.getExpiry()));
                     Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_BAN_WITH_EXPIRY, messageParams);
                 } else {
                     Util.messageSender(impl, sender, Config.MESSAGE_LOOKUP_BAN, messageParams);

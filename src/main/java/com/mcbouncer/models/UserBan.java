@@ -30,7 +30,7 @@ public class UserBan {
     private String bannedAs;
     private String reason;
     private Date timeBanned;
-    private Date expiry;
+    private Integer expiry;
     private String issuerUsername;
     private String issuerId;
     private String server;
@@ -47,7 +47,7 @@ public class UserBan {
         reason = obj.getString("reason");
         timeBanned = Util.parseDate(obj.getString("time_banned"));
         if (!obj.isNull("expiry")) {
-            expiry = Util.parseDate(obj.getString("expiry"));
+            expiry = obj.getInt("expiry");
         }
         else {
             expiry = null;
@@ -69,7 +69,7 @@ public class UserBan {
         return reason;
     }
 
-    public Date getExpiry() {
+    public Integer getExpiry() {
         return expiry;
     }
 

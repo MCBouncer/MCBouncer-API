@@ -19,6 +19,7 @@ package com.mcbouncer.api;
 
 import com.mcbouncer.Config;
 import com.mcbouncer.api.MCBouncerImplementation;
+import com.mcbouncer.exceptions.MCBouncerException;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +33,8 @@ public abstract class MCBouncerConfig {
         this.impl = impl;
     }
 
-    public abstract void load();
-    public abstract void load(String filename);
+    public abstract void load() throws MCBouncerException;
+    public abstract void load(String filename) throws MCBouncerException;
 
     public abstract void save() throws IOException;
 

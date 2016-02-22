@@ -80,8 +80,6 @@ public class BanCommand extends MCBouncerCommand {
         catch (APIException e) {
             messageParams.put("error_msg", e.getMessage());
             Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_FAILURE, messageParams);
-            sender.sendMessage("[MCBouncer - ERROR] " + e.getMessage());
-            e.getCause().printStackTrace();
         }
         catch (MCBouncerException e) {
             messageParams.put("error_msg", e.getMessage());
