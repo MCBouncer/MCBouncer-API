@@ -31,7 +31,7 @@ public class GlobalNoteCommand extends MCBouncerCommand {
     private MCBouncerImplementation impl;
 
     public GlobalNoteCommand(MCBouncerImplementation plugin) {
-        super("addgnote", Perm.COMMAND_GLOBALNOTE);
+        super("addglobalnote", Perm.COMMAND_GLOBALNOTE, "addgnote");
         this.impl = plugin;
     }
 

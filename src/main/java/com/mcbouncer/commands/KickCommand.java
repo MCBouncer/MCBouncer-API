@@ -30,7 +30,7 @@ public class KickCommand extends MCBouncerCommand {
     private MCBouncerImplementation impl;
 
     public KickCommand(MCBouncerImplementation impl) {
-        super("kick", Perm.COMMAND_KICK);
+        super("kick", Perm.COMMAND_KICK, "boot");
         this.impl = impl;
     }
 

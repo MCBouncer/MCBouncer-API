@@ -30,7 +30,7 @@ public class UnbanCommand extends MCBouncerCommand {
     private MCBouncerImplementation impl;
 
     public UnbanCommand(MCBouncerImplementation impl) {
-        super("unban", Perm.COMMAND_UNBAN, "delban");
+        super("unban", Perm.COMMAND_UNBAN, "delban", "pardon");
         this.impl = impl;
     }
 
