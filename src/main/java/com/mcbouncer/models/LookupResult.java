@@ -29,9 +29,7 @@ public class LookupResult {
     private int banCount;
     private int noteCount;
     private int ipBanCount;
-    private String banReason;
-    private String issuer;
-    private String issuerId;
+    private UserBan ban;
     private List<UserBan> bans = new ArrayList<>();
     private List<Note> notes = new ArrayList<>();
 
@@ -41,10 +39,7 @@ public class LookupResult {
         ipBanCount = result.getInt("ipban_count");
         noteCount = result.getInt("note_count");
         if (banned) {
-            JSONObject ban = result.getJSONObject("ban");
-            banReason = ban.getString("reason");
-            issuer = ban.getString("issuer");
-            issuerId = ban.getString("issuer_id");
+            ban = new UserBan(result.getJSONObject("ban"));
         }
 
         JSONArray _bans = result.getJSONArray("bans");
@@ -76,23 +71,15 @@ public class LookupResult {
         return ipBanCount;
     }
 
-    public String getBanReason() {
-        return banReason;
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public String getIssuerId() {
-        return issuerId;
-    }
-
     public List<UserBan> getBans() {
         return bans;
     }
 
     public List<Note> getNotes() {
         return notes;
+    }
+
+    public UserBan getBan() {
+        return ban;
     }
 }

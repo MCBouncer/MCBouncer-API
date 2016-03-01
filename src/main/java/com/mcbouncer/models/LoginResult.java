@@ -25,9 +25,7 @@ public class LoginResult {
     private int banCount;
     private int noteCount;
     private int ipBanCount;
-    private String banReason;
-    private String issuer;
-    private String issuerId;
+    private UserBan ban;
 
     public LoginResult(JSONObject result) {
         banned = result.has("ban");
@@ -35,9 +33,7 @@ public class LoginResult {
         ipBanCount = result.getInt("ipban_count");
         noteCount = result.getInt("note_count");
         if (banned) {
-            banReason = result.getString("reason");
-            issuer = result.getString("issuer");
-            issuerId = result.getString("issuer_id");
+            ban = new UserBan(result.getJSONObject("ban"));
         }
     }
 
@@ -53,19 +49,12 @@ public class LoginResult {
         return ipBanCount;
     }
 
-    public String getBanReason() {
-        return banReason;
-    }
-
     public boolean isBanned() {
         return banned;
     }
 
-    public String getIssuer() {
-        return issuer;
+    public UserBan getBan() {
+        return ban;
     }
 
-    public String getIssuerId() {
-        return issuerId;
-    }
 }

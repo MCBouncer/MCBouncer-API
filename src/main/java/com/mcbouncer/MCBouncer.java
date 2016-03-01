@@ -32,10 +32,12 @@ import com.mcbouncer.models.LookupResult;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class MCBouncer {
 
@@ -268,6 +270,20 @@ public class MCBouncer {
         JSONObject ret = post("lookup", fields);
 
         return new LookupResult(ret);
+    }
+
+    public LoginResult login(String username, UUID uuid, InetAddress ipAddress) throws APIException {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("username", username);
+        fields.put("user_id", uuid.toString());
+
+        if (!getConfig().getBoolean(Config.DISABLED_IP_FUNCTIONS)) {
+            fields.put("ipaddress", ipAddress.getHostAddress());
+        }
+
+        JSONObject ret = post("login", fields);
+
+        return new LoginResult(ret);
     }
 
     public LoginResult login(String username) throws APIException {

@@ -35,7 +35,7 @@ public abstract class MCBouncerCommand {
         return this.aliases;
     }
 
-    public Perm getPermission() {
+    public Perm getRequiredPermission() {
         return this.permission;
     }
 

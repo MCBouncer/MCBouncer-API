@@ -96,4 +96,36 @@ public class Util {
 
         return s.toString();
     }
+
+    private static Integer SECONDS_IN_DAY = 86400;
+    private static Integer SECONDS_IN_HOUR = 3600;
+    private static Integer SECONDS_IN_MINUTE = 60;
+
+    public static String secondsToString(Integer seconds) {
+        // Seconds in a day: 86400
+        // Seconds in an hour: 3600
+        // Seconds in a minute: 60
+
+        StringBuilder time = new StringBuilder("");
+
+        if (seconds > SECONDS_IN_DAY) {
+            Integer amount = seconds / SECONDS_IN_DAY;
+            seconds = seconds % SECONDS_IN_DAY;
+            time.append(amount).append("d");
+        }
+
+        if (seconds > SECONDS_IN_HOUR) {
+            Integer amount = seconds / SECONDS_IN_HOUR;
+            seconds = seconds % SECONDS_IN_HOUR;
+            time.append(amount).append("h");
+        }
+
+        if (seconds > SECONDS_IN_MINUTE) {
+            Integer amount = seconds / SECONDS_IN_MINUTE;
+            seconds = seconds % SECONDS_IN_MINUTE;
+            time.append(amount).append("m");
+        }
+
+        return time.toString();
+    }
 }

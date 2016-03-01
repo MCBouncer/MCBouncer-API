@@ -27,6 +27,7 @@ public enum Config {
     BROADCAST_NOTE_MESSAGES("broadcast-note-messages", false),
     BROADCAST_KICK_MESSAGES("broadcast-kick-messages", false),
     DISABLED_IP_FUNCTIONS("disableIPFunctions", false),
+    ALLOW_ON_FAIL("allow-on-fail", false),
     WEBSITE("website", "http://mcbouncer.com"),
     MESSAGE_BAN_BROADCAST("messages.ban.broadcast", "&2{{username}} was banned by {{issuer}} for {{reason}}"),
     MESSAGE_BAN_ADD_SUCCESS("messages.ban.add-success", "&2{{username}} was successfully banned."),
@@ -46,7 +47,10 @@ public enum Config {
     MESSAGE_KICK_FAILURE("messages.kick.failure", "&4Failed to kick {{username}}: {{error_msg}}"),
     MESSAGE_KICK_BROADCAST("messages.kick.broadcast", "&2{{username}} was kicked by {{issuer}} for {{reason}}"),
     MESSAGE_RELOAD_SUCCESS("messages.reload.success", "&2Reloaded the MCBouncer configuration successfully."),
-    MESSAGE_RELOAD_BROADCAST("messages.reload.broadcast", "&2{{issuer}} reloaded the MCBouncer configuration"),
+    MESSAGE_RELOAD_BROADCAST("messages.reload.broadcast", "&2{{issuer}} reloaded the MCBouncer configuration."),
+    MESSAGE_COMMUNICATION_FAILURE("messages.communication-failure", "Failed to communicate with ban server."),
+    MESSAGE_NUM_BANS_DISALLOW("messages.num-bans-disallow", "You are banned on too many servers to join here."),
+    MESSAGE_LOGIN_NOTICE("messages.login-notice", "&2{{username}} has {{num_bans}} ban(s) and {{num_notes}} note(s)."),
     DATE_FORMAT("date-format", "MMM.d.YYYY@HH:mm:ss");
 
     private final String key;

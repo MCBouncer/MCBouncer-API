@@ -20,13 +20,14 @@ package com.mcbouncer.commands;
 import com.mcbouncer.Config;
 import com.mcbouncer.Perm;
 import com.mcbouncer.Util;
+import com.mcbouncer.api.MCBouncerCommand;
 import com.mcbouncer.api.MCBouncerCommandSender;
 import com.mcbouncer.api.MCBouncerImplementation;
 import com.mcbouncer.exceptions.MCBouncerException;
 
 import java.util.HashMap;
 
-public class MCBouncerPluginCommand extends com.mcbouncer.api.MCBouncerCommand {
+public class MCBouncerPluginCommand extends MCBouncerCommand {
 
     private MCBouncerImplementation impl;
 

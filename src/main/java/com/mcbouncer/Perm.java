@@ -34,7 +34,8 @@ public enum Perm {
     MESSAGE_KICK,
     MESSAGE_RELOAD,
     MESSAGE_UNBAN,
-    MESSAGE_ADD_NOTE;
+    MESSAGE_ADD_NOTE,
+    MESSAGE_LOGIN_NOTICE;
 
     private final String perm;
 
