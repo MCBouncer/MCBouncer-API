@@ -108,7 +108,6 @@ public class MCBouncer {
 
     private JSONObject post(String resource, final Map<String, Object> fields) throws APIException {
         String url = String.format("%s/api/v2/%s", getConfig().getString(Config.WEBSITE), resource);
-        System.out.println(url);
         HttpRequestWithBody req = Unirest.post(url);
         req.header("Authorization", "APIKey " + getConfig().getString(Config.APIKEY));
 

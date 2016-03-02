@@ -47,11 +47,13 @@ public class PlayerListener {
                 if (result.getBan().getExpiry() != null) {
                     banMessage.append(" Expires in: ").append(Util.secondsToString(result.getBan().getExpiry()));
                 }
-                event.disallow(MCBouncerPlayerLoginEvent.Reason.KICK_BANNED, "Banned: " + banMessage.toString());
+                event.disallow(MCBouncerPlayerLoginEvent.Reason.KICK_BANNED, banMessage.toString());
                 return;
             }
 
-            if (result.getBanCount() > this.impl.getMCBouncerPlugin().getConfig().getInt(Config.NUM_BANS_DISALLOW)) {
+            int num_bans_disallow = this.impl.getMCBouncerPlugin().getConfig().getInt(Config.NUM_BANS_DISALLOW);
+
+            if (num_bans_disallow >= 0 && result.getBanCount() > num_bans_disallow) {
                 event.disallow(MCBouncerPlayerLoginEvent.Reason.KICK_BANNED, this.impl.getMCBouncerPlugin().getConfig().getString(Config.MESSAGE_NUM_BANS_DISALLOW));
                 return;
             }

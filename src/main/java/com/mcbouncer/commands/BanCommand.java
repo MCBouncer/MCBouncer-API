@@ -49,21 +49,22 @@ public class BanCommand extends MCBouncerCommand {
 
         messageParams.put("username", user);
 
-        MCBouncerPlayer p;
+        MCBouncerPlayer s;
         if (sender instanceof MCBouncerPlayer) {
-            p = (MCBouncerPlayer) sender;
+            s = (MCBouncerPlayer) sender;
         } else if (sender.getName().equalsIgnoreCase("console")) {
-            p = ConsolePlayer.getInstance();
+            s = ConsolePlayer.getInstance();
         } else {
             return false;
         }
 
         try {
-            impl.getMCBouncerPlugin().addBan(user, reason, p);
+            MCBouncerPlayer p = impl.getOfflinePlayer(user);
+            impl.getMCBouncerPlugin().addBan(p, reason, s);
             Util.messageSender(impl, sender, Config.MESSAGE_BAN_ADD_SUCCESS, messageParams);
 
             boolean broadcastMessage = this.impl.getMCBouncerPlugin().getConfig().getBoolean(Config.BROADCAST_BAN_MESSAGES);
-            messageParams.put("issuer", p.getName());
+            messageParams.put("issuer", s.getName());
             messageParams.put("reason", reason);
 
             Perm perm = null;
